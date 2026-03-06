@@ -37,6 +37,7 @@ export default function TransactionsPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [methodFilter, setMethodFilter] = useState('all')
   const [isClient, setIsClient] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -67,28 +68,28 @@ export default function TransactionsPage() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-      <Sidebar />
-      <Navbar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
       <PageTransition>
-        <main className="ml-64 min-h-[calc(100vh-73px)] p-8">
-          <div className="max-w-7xl mx-auto space-y-8">
+        <main className="ml-0 md:ml-[260px] min-h-[calc(100vh-73px)] p-4 md:p-8">
+          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white">Transactions</h1>
-                <p className="mt-1 text-white/50">Manage and track all financial transactions</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">Transactions</h1>
+                <p className="mt-1 text-sm sm:text-base text-white/50">Manage and track all financial transactions</p>
               </div>
               <Button
                 onClick={handleExport}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm sm:text-base"
               >
                 Export
               </Button>
             </div>
 
             {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm text-white/70 mb-2 block">Search</label>
                 <div className="relative">
@@ -97,7 +98,7 @@ export default function TransactionsPage() {
                     placeholder="Search customer or ID..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-white/5 border-white/10 pl-10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                    className="bg-white/5 border-white/10 pl-10 text-sm sm:text-base text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
                   />
                 </div>
               </div>
@@ -105,7 +106,7 @@ export default function TransactionsPage() {
               <div>
                 <label className="text-sm text-white/70 mb-2 block">Status</label>
                 <Select value={statusFilter} onValueChange={handleStatusChange}>
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                  <SelectTrigger className="bg-white/5 border-white/10 text-sm sm:text-base text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-950 border-white/10">
@@ -120,7 +121,7 @@ export default function TransactionsPage() {
               <div>
                 <label className="text-sm text-white/70 mb-2 block">Method</label>
                 <Select value={methodFilter} onValueChange={setMethodFilter}>
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                  <SelectTrigger className="bg-white/5 border-white/10 text-sm sm:text-base text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-950 border-white/10">
@@ -141,7 +142,7 @@ export default function TransactionsPage() {
                     toast.info('Filters reset', { description: 'Showing all transactions' })
                   }}
                   variant="outline"
-                  className="w-full border-purple-500/50 hover:border-purple-400 hover:bg-purple-500/10 text-purple-400 font-medium"
+                  className="w-full border-purple-500/50 hover:border-purple-400 hover:bg-purple-500/10 text-purple-400 font-medium text-sm sm:text-base"
                 >
                   <Filter className="mr-2 h-4 w-4" />
                   Reset
@@ -152,21 +153,21 @@ export default function TransactionsPage() {
             {/* Transactions Table */}
             <motion.div
               whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
+              className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
             >
               {!isLoading ? (
                 <div className="overflow-x-auto">
                   {filteredTransactions.length > 0 ? (
-                    <table className="w-full">
+                    <table className="w-full min-w-[700px]">
                       <thead>
                         <tr className="border-b border-white/10">
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">ID</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Date</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Customer</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Amount</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Status</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Method</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Type</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">ID</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">Date</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">Customer</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">Amount</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">Status</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">Method</th>
+                          <th className="px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-white/70 whitespace-nowrap">Type</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -176,11 +177,11 @@ export default function TransactionsPage() {
                             whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
                             className="border-b border-white/5 transition-colors duration-200"
                           >
-                            <td className="px-4 py-4 text-sm text-white/70">#{tx.id}</td>
-                            <td className="px-4 py-4 text-sm text-white/70">{tx.date}</td>
-                            <td className="px-4 py-4 text-sm text-white">{tx.customer}</td>
-                            <td className="px-4 py-4 text-sm font-medium text-white">{tx.amount}</td>
-                            <td className="px-4 py-4 text-sm">
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-white/70 whitespace-nowrap">#{tx.id}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-white/70 whitespace-nowrap">{tx.date}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-white whitespace-nowrap">{tx.customer}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm font-medium text-white whitespace-nowrap">{tx.amount}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm">
                               <Badge
                                 variant={
                                   tx.status === 'Success'
@@ -189,12 +190,13 @@ export default function TransactionsPage() {
                                       ? 'secondary'
                                       : 'destructive'
                                 }
+                                className="text-xs"
                               >
                                 {tx.status}
                               </Badge>
                             </td>
-                            <td className="px-4 py-4 text-sm text-white/70">{tx.method}</td>
-                            <td className="px-4 py-4 text-sm text-white/70">{tx.type}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-white/70 whitespace-nowrap">{tx.method}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-white/70 whitespace-nowrap">{tx.type}</td>
                           </motion.tr>
                         ))}
                       </tbody>
@@ -214,8 +216,8 @@ export default function TransactionsPage() {
 
             {/* Summary */}
             {filteredTransactions.length > 0 && (
-              <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl">
-                <p className="text-sm text-white/70">
+              <div className="rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl">
+                <p className="text-xs md:text-sm text-white/70">
                   Showing <span className="font-semibold text-white">{filteredTransactions.length}</span> transaction{filteredTransactions.length !== 1 ? 's' : ''}
                 </p>
               </div>

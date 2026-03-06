@@ -93,6 +93,7 @@ export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [isClient, setIsClient] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -121,29 +122,29 @@ export default function CustomersPage() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-      <Sidebar />
-      <Navbar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
       <PageTransition>
-        <main className="ml-64 min-h-[calc(100vh-73px)] p-8">
-          <div className="max-w-7xl mx-auto space-y-8">
+        <main className="ml-0 md:ml-[260px] min-h-[calc(100vh-73px)] p-4 md:p-8">
+          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white">Customers</h1>
-                <p className="mt-1 text-white/50">Manage your customer relationships</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">Customers</h1>
+                <p className="mt-1 text-sm sm:text-base text-white/50">Manage your customer relationships</p>
               </div>
               <Button
                 onClick={handleAddCustomer}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm sm:text-base"
               >
                 Add Customer
               </Button>
             </div>
 
             {/* Filters */}
-            <div className="flex gap-4 items-end">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
+              <div className="flex-1 w-full">
                 <label className="text-sm text-white/70 mb-2 block">Search customers</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
@@ -151,7 +152,7 @@ export default function CustomersPage() {
                     placeholder="Search by name or email..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-white/5 border-white/10 pl-10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                    className="bg-white/5 border-white/10 pl-10 text-sm sm:text-base text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
                   />
                 </div>
               </div>
@@ -163,7 +164,7 @@ export default function CustomersPage() {
                   toast.info('Filters reset', { description: 'Showing all customers' })
                 }}
                 variant="outline"
-                className="border-white/20 hover:bg-white/10 text-white"
+                className="w-full sm:w-auto border-white/20 hover:bg-white/10 text-white text-sm sm:text-base"
               >
                 Reset
               </Button>
@@ -177,32 +178,32 @@ export default function CustomersPage() {
                     <motion.div
                       key={customer.id}
                       whileHover={{ y: -4 }}
-                      className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer"
+                      className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10 cursor-pointer"
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-12 w-12">
+                        <div className="flex items-center gap-3 md:gap-4">
+                          <Avatar className="h-10 w-10 md:h-12 md:w-12">
                             <AvatarImage src={customer.avatar} />
                             <AvatarFallback>{customer.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <h3 className="font-semibold text-white">{customer.name}</h3>
-                            <p className="text-sm text-white/50">{customer.email}</p>
+                            <h3 className="text-sm md:text-base font-semibold text-white">{customer.name}</h3>
+                            <p className="text-xs md:text-sm text-white/50">{customer.email}</p>
                           </div>
                         </div>
-                        <Badge variant={customer.status === 'Active' ? 'default' : customer.status === 'Pending' ? 'secondary' : 'destructive'}>
+                        <Badge variant={customer.status === 'Active' ? 'default' : customer.status === 'Pending' ? 'secondary' : 'destructive'} className="text-xs">
                           {customer.status}
                         </Badge>
                       </div>
 
-                      <div className="space-y-3 mb-4">
+                      <div className="space-y-2 md:space-y-3 mb-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-white/50">Total Revenue</span>
-                          <span className="font-semibold text-white">{customer.revenue}</span>
+                          <span className="text-xs md:text-sm text-white/50">Total Revenue</span>
+                          <span className="text-sm md:text-base font-semibold text-white">{customer.revenue}</span>
                         </div>
                         <div className="flex items-center gap-2 text-white/70">
-                          <Phone className="h-4 w-4" />
-                          <span className="text-sm">{customer.phone}</span>
+                          <Phone className="h-3 w-3 md:h-4 md:w-4" />
+                          <span className="text-xs md:text-sm">{customer.phone}</span>
                         </div>
                       </div>
 
@@ -210,9 +211,9 @@ export default function CustomersPage() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleContactCustomer(customer.name)}
-                        className="w-full rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/20 hover:border-blue-500/40 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-all duration-300"
+                        className="w-full rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/20 hover:border-blue-500/40 py-2 text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 transition-all duration-300"
                       >
-                        <Mail className="inline mr-2 h-4 w-4" />
+                        <Mail className="inline mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" />
                         Send Email
                       </motion.button>
                     </motion.div>
@@ -235,27 +236,27 @@ export default function CustomersPage() {
 
             {/* Summary */}
             {filteredCustomers.length > 0 && (
-              <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                   <div>
-                    <p className="text-sm text-white/50">Total Customers</p>
-                    <p className="text-2xl font-bold text-white">{filteredCustomers.length}</p>
+                    <p className="text-xs md:text-sm text-white/50">Total Customers</p>
+                    <p className="text-xl md:text-2xl font-bold text-white">{filteredCustomers.length}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-white/50">Active</p>
-                    <p className="text-2xl font-bold text-green-400">
+                    <p className="text-xs md:text-sm text-white/50">Active</p>
+                    <p className="text-xl md:text-2xl font-bold text-green-400">
                       {filteredCustomers.filter((c) => c.status === 'Active').length}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-white/50">Inactive</p>
-                    <p className="text-2xl font-bold text-red-400">
+                    <p className="text-xs md:text-sm text-white/50">Inactive</p>
+                    <p className="text-xl md:text-2xl font-bold text-red-400">
                       {filteredCustomers.filter((c) => c.status === 'Inactive').length}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-white/50">Pending</p>
-                    <p className="text-2xl font-bold text-yellow-400">
+                    <p className="text-xs md:text-sm text-white/50">Pending</p>
+                    <p className="text-xl md:text-2xl font-bold text-yellow-400">
                       {filteredCustomers.filter((c) => c.status === 'Pending').length}
                     </p>
                   </div>

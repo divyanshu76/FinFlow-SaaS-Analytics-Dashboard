@@ -62,6 +62,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isClient, setIsClient] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -92,29 +93,29 @@ export default function Dashboard() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-      <Sidebar />
-      <Navbar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
       <PageTransition>
-        <main className="ml-64 min-h-[calc(100vh-73px)] p-8">
-          <div className="max-w-7xl mx-auto space-y-8">
+        <main className="ml-0 md:ml-[260px] min-h-[calc(100vh-73px)] p-4 md:p-8">
+          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                <p className="mt-1 text-white/50">Welcome back to your analytics</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">Dashboard</h1>
+                <p className="mt-1 text-sm sm:text-base text-white/50">Welcome back to your analytics</p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <Button
                   onClick={handleRefresh}
                   variant="outline"
-                  className="border-blue-500/50 hover:border-blue-400 hover:bg-blue-500/10 text-blue-400 font-medium"
+                  className="flex-1 sm:flex-none border-blue-500/50 hover:border-blue-400 hover:bg-blue-500/10 text-blue-400 font-medium text-sm sm:text-base"
                 >
                   Refresh
                 </Button>
                 <Button
                   onClick={handleExport}
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                  className="flex-1 sm:flex-none bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm sm:text-base"
                 >
                   Export
                 </Button>
@@ -123,7 +124,7 @@ export default function Dashboard() {
 
             {/* Analytics Cards */}
             {!isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <AnalyticsCard
                   title="Total Revenue"
                   value="$124,530"
@@ -158,7 +159,7 @@ export default function Dashboard() {
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="h-24 rounded-2xl bg-white/5 animate-pulse" />
                 ))}
@@ -166,45 +167,66 @@ export default function Dashboard() {
             )}
 
             {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               {/* Revenue Chart */}
               <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
                 whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
+                className="group rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-5 md:p-6 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-indigo-500/10"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">Revenue Growth</h3>
-                  <div className="text-white/40 group-hover:text-white/60 transition-colors">
+                <div className="mb-5 md:mb-6 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base md:text-lg font-semibold text-white">Revenue Growth</h3>
+                    <p className="text-xs text-slate-400 mt-1">Monthly revenue performance</p>
+                  </div>
+                  <div className="text-slate-500 group-hover:text-slate-400 transition-colors">
                     <MoreVertical className="h-4 w-4" />
                   </div>
                 </div>
                 {!isLoading ? (
-                  <ResponsiveContainer width="100%" height={250}>
+                  <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={revenueData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis stroke="rgba(255,255,255,0.4)" />
-                      <YAxis stroke="rgba(255,255,255,0.4)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
+                      <XAxis 
+                        stroke="rgba(148,163,184,0.5)" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis 
+                        stroke="rgba(148,163,184,0.5)" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(value) => `$${value}`}
+                      />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                          border: '1px solid rgba(255,255,255,0.2)',
-                          borderRadius: '8px',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '12px',
                           color: '#ffffff',
+                          boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
                         }}
-                        labelStyle={{ color: '#ffffff' }}
+                        labelStyle={{ color: '#94a3b8', marginBottom: '8px' }}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
                       <Line
                         type="monotone"
                         dataKey="revenue"
                         stroke="url(#colorRevenue)"
-                        strokeWidth={2}
-                        dot={false}
+                        strokeWidth={3}
+                        dot={{ fill: '#6366f1', r: 4, strokeWidth: 0 }}
+                        activeDot={{ r: 6, strokeWidth: 2 }}
                         isAnimationActive={true}
+                        animationDuration={1500}
                       />
                       <defs>
                         <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-                          <stop offset="95%" stopColor="#9333ea" stopOpacity={0.1} />
+                          <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                     </LineChart>
@@ -216,41 +238,61 @@ export default function Dashboard() {
 
               {/* User Growth Chart */}
               <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
                 whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-purple-500/10"
+                className="group rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-5 md:p-6 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-purple-500/10"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">User Growth</h3>
-                  <div className="text-white/40 group-hover:text-white/60 transition-colors">
+                <div className="mb-5 md:mb-6 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base md:text-lg font-semibold text-white">User Growth</h3>
+                    <p className="text-xs text-slate-400 mt-1">New users over time</p>
+                  </div>
+                  <div className="text-slate-500 group-hover:text-slate-400 transition-colors">
                     <MoreVertical className="h-4 w-4" />
                   </div>
                 </div>
                 {!isLoading ? (
-                  <ResponsiveContainer width="100%" height={250}>
+                  <ResponsiveContainer width="100%" height={300}>
                     <AreaChart data={userGrowthData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                      <XAxis stroke="rgba(255,255,255,0.4)" />
-                      <YAxis stroke="rgba(255,255,255,0.4)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
+                      <XAxis 
+                        stroke="rgba(148,163,184,0.5)" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis 
+                        stroke="rgba(148,163,184,0.5)" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                          border: '1px solid rgba(255,255,255,0.2)',
-                          borderRadius: '8px',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '12px',
                           color: '#ffffff',
+                          boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
                         }}
-                        labelStyle={{ color: '#ffffff' }}
+                        labelStyle={{ color: '#94a3b8', marginBottom: '8px' }}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
                       <Area
                         type="monotone"
                         dataKey="users"
                         stroke="#a855f7"
+                        strokeWidth={3}
                         fill="url(#colorUsers)"
                         isAnimationActive={true}
+                        animationDuration={1500}
                       />
                       <defs>
                         <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#a855f7" stopOpacity={0.8} />
-                          <stop offset="95%" stopColor="#a855f7" stopOpacity={0.1} />
+                          <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                     </AreaChart>
@@ -263,48 +305,54 @@ export default function Dashboard() {
 
             {/* Transactions Table */}
             <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
               whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-green-500/10"
+              className="group rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md p-5 md:p-6 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-emerald-500/10"
             >
-              <div className="mb-6 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-white">Recent Transactions</h3>
+              <div className="mb-5 md:mb-6 flex items-center justify-between">
+                <div>
+                  <h3 className="text-base md:text-lg font-semibold text-white">Recent Transactions</h3>
+                  <p className="text-xs text-slate-400 mt-1">Latest payment activities</p>
+                </div>
               </div>
 
               {/* Search */}
-              <div className="mb-6 relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              <div className="mb-5 md:mb-6 relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 <Input
                   placeholder="Search transactions..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-white/5 border-white/10 pl-10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                  className="bg-slate-800/50 border-slate-700 pl-10 text-sm sm:text-base text-slate-100 placeholder:text-slate-500 focus:bg-slate-800 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20"
                 />
               </div>
 
               {!isLoading ? (
                 <div className="overflow-x-auto">
                   {filteredTransactions.length > 0 ? (
-                    <table className="w-full">
+                    <table className="w-full min-w-[600px]">
                       <thead>
-                        <tr className="border-b border-white/10">
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Date</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Customer</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Amount</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Status</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-white/70">Method</th>
+                        <tr className="border-b border-slate-800">
+                          <th className="px-3 py-3 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-slate-400 uppercase tracking-wider whitespace-nowrap">Date</th>
+                          <th className="px-3 py-3 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-slate-400 uppercase tracking-wider whitespace-nowrap">Customer</th>
+                          <th className="px-3 py-3 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-slate-400 uppercase tracking-wider whitespace-nowrap">Amount</th>
+                          <th className="px-3 py-3 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-slate-400 uppercase tracking-wider whitespace-nowrap">Status</th>
+                          <th className="px-3 py-3 md:px-4 md:py-3 text-left text-xs md:text-sm font-medium text-slate-400 uppercase tracking-wider whitespace-nowrap">Method</th>
                         </tr>
                       </thead>
                       <tbody>
                         {filteredTransactions.map((tx) => (
                           <motion.tr
                             key={tx.id}
-                            whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
-                            className="border-b border-white/5 transition-colors duration-200"
+                            whileHover={{ backgroundColor: 'rgba(99,102,241,0.05)' }}
+                            className="border-b border-slate-800/50 transition-colors duration-200 hover:bg-slate-800/30"
                           >
-                            <td className="px-4 py-4 text-sm text-white/70">{tx.date}</td>
-                            <td className="px-4 py-4 text-sm text-white">{tx.customer}</td>
-                            <td className="px-4 py-4 text-sm font-medium text-white">{tx.amount}</td>
-                            <td className="px-4 py-4 text-sm">
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-slate-300 whitespace-nowrap">{tx.date}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm font-medium text-slate-200 whitespace-nowrap">{tx.customer}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm font-semibold text-white whitespace-nowrap">{tx.amount}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm">
                               <Badge
                                 variant={
                                   tx.status === 'Success'
@@ -313,11 +361,18 @@ export default function Dashboard() {
                                       ? 'secondary'
                                       : 'destructive'
                                 }
+                                className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                                  tx.status === 'Success' 
+                                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' 
+                                    : tx.status === 'Pending'
+                                      ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                                      : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'
+                                }`}
                               >
                                 {tx.status}
                               </Badge>
                             </td>
-                            <td className="px-4 py-4 text-sm text-white/70">{tx.method}</td>
+                            <td className="px-3 py-3 md:px-4 md:py-4 text-xs md:text-sm text-white/70 whitespace-nowrap">{tx.method}</td>
                           </motion.tr>
                         ))}
                       </tbody>
@@ -338,23 +393,23 @@ export default function Dashboard() {
             {/* Top Customers */}
             <motion.div
               whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-amber-500/10"
+              className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-amber-500/10"
             >
-              <h3 className="mb-6 text-lg font-semibold text-white">Top Customers</h3>
+              <h3 className="mb-4 md:mb-6 text-base md:text-lg font-semibold text-white">Top Customers</h3>
               {!isLoading ? (
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   {topCustomers.length > 0 ? (
                     topCustomers.map((customer) => (
                       <motion.div
                         key={customer.id}
                         whileHover={{ x: 4 }}
-                        className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] p-4 transition-all duration-300 hover:border-white/10 hover:bg-white/[0.04]"
+                        className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] p-3 md:p-4 transition-all duration-300 hover:border-white/10 hover:bg-white/[0.04]"
                       >
                         <div>
-                          <p className="font-medium text-white">{customer.name}</p>
-                          <p className="text-sm text-white/50">{customer.revenue}</p>
+                          <p className="text-sm md:text-base font-medium text-white">{customer.name}</p>
+                          <p className="text-xs md:text-sm text-white/50">{customer.revenue}</p>
                         </div>
-                        <Badge variant={customer.status === 'Active' ? 'default' : 'secondary'}>
+                        <Badge variant={customer.status === 'Active' ? 'default' : 'secondary'} className="text-xs">
                           {customer.status}
                         </Badge>
                       </motion.div>

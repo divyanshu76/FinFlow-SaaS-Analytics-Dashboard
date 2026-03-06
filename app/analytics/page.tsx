@@ -49,6 +49,7 @@ const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b']
 export default function AnalyticsPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isClient, setIsClient] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -56,27 +57,27 @@ export default function AnalyticsPage() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-      <Sidebar />
-      <Navbar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
       <PageTransition>
-        <main className="ml-64 min-h-[calc(100vh-73px)] p-8">
-          <div className="max-w-7xl mx-auto space-y-8">
+        <main className="ml-0 md:ml-[260px] min-h-[calc(100vh-73px)] p-4 md:p-8">
+          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             {/* Header */}
             <div>
-              <h1 className="text-3xl font-bold text-white">Analytics</h1>
-              <p className="mt-1 text-white/50">Comprehensive performance metrics</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Analytics</h1>
+              <p className="mt-1 text-sm sm:text-base text-white/50">Comprehensive performance metrics</p>
             </div>
 
             {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               {/* Revenue Chart */}
               <motion.div
                 whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
+                className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">Revenue Chart</h3>
+                <div className="mb-4 md:mb-6 flex items-center justify-between">
+                  <h3 className="text-base md:text-lg font-semibold text-white">Revenue Chart</h3>
                   <div className="text-white/40 group-hover:text-white/60 transition-colors">
                     <MoreVertical className="h-4 w-4" />
                   </div>
@@ -117,10 +118,10 @@ export default function AnalyticsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-purple-500/10"
+                className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-purple-500/10"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">Traffic Sources</h3>
+                <div className="mb-4 md:mb-6 flex items-center justify-between">
+                  <h3 className="text-base md:text-lg font-semibold text-white">Traffic Sources</h3>
                   <div className="text-white/40 group-hover:text-white/60 transition-colors">
                     <MoreVertical className="h-4 w-4" />
                   </div>
@@ -165,10 +166,10 @@ export default function AnalyticsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-green-500/10"
+                className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-green-500/10"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">Conversion Rate</h3>
+                <div className="mb-4 md:mb-6 flex items-center justify-between">
+                  <h3 className="text-base md:text-lg font-semibold text-white">Conversion Rate</h3>
                   <div className="text-white/40 group-hover:text-white/60 transition-colors">
                     <MoreVertical className="h-4 w-4" />
                   </div>
@@ -202,10 +203,10 @@ export default function AnalyticsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
                 whileHover={{ y: -4 }}
-                className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-amber-500/10"
+                className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-amber-500/10"
               >
-                <div className="mb-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">Session Trends</h3>
+                <div className="mb-4 md:mb-6 flex items-center justify-between">
+                  <h3 className="text-base md:text-lg font-semibold text-white">Session Trends</h3>
                   <div className="text-white/40 group-hover:text-white/60 transition-colors">
                     <MoreVertical className="h-4 w-4" />
                   </div>

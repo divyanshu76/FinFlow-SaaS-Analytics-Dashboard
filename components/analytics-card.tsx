@@ -23,38 +23,56 @@ export function AnalyticsCard({
 }: AnalyticsCardProps) {
   return (
     <motion.div
-      whileHover={{ scale: 1.02, y: -4 }}
-      className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
+      whileHover={{ scale: 1.02, y: -6 }}
+      className="group relative overflow-hidden rounded-2xl bg-slate-900/70 backdrop-blur-md border border-white/10 hover:border-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-indigo-500/10 cursor-pointer"
     >
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-purple-500/0" />
+      {/* Animated gradient glow on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5" />
       </div>
+      
+      {/* Subtle inner border glow */}
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/5 group-hover:ring-white/10 transition-all duration-300" />
 
-      <div className="relative z-10 space-y-4">
+      <div className="relative z-10 p-5 md:p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-white/70">{title}</span>
-          <div className="text-white/50 group-hover:text-white/70 transition-colors duration-300">
+          <span className="text-xs md:text-sm font-medium text-slate-400 group-hover:text-slate-300 transition-colors">{title}</span>
+          <div className="text-slate-500 group-hover:text-slate-400 transition-colors duration-300 scale-110">
             {icon}
           </div>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-3xl font-bold text-white">{value}</h3>
+        <div className="space-y-3">
+          <motion.h3 
+            className="text-3xl md:text-4xl font-bold text-white tracking-tight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: delay + 0.2, duration: 0.6 }}
+          >
+            {value}
+          </motion.h3>
           {trend !== undefined && (
-            <div className="flex items-center gap-1">
-              <div className={`flex items-center gap-1 text-sm font-medium ${trend >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+            <motion.div 
+              className="flex items-center gap-1.5"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: delay + 0.3, duration: 0.4 }}
+            >
+              <div className={`flex items-center gap-1 text-xs md:text-sm font-semibold ${trend >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                 {trend >= 0 ? (
-                  <TrendingUp className="h-4 w-4" />
+                  <TrendingUp className="h-3.5 w-3.5" />
                 ) : (
-                  <TrendingDown className="h-4 w-4" />
+                  <TrendingDown className="h-3.5 w-3.5" />
                 )}
                 <span>
                   {trend >= 0 ? '+' : ''}{trend}%
                 </span>
               </div>
-              {trendLabel && <span className="text-xs text-white/50">{trendLabel}</span>}
-            </div>
+              {trendLabel && <span className="text-xs text-slate-500 hidden sm:inline">{trendLabel}</span>}
+            </motion.div>
           )}
         </div>
       </div>

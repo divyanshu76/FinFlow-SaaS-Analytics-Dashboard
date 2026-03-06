@@ -16,6 +16,7 @@ import { User, Lock, Bell, CreditCard } from 'lucide-react'
 
 export default function SettingsPage() {
   const [isClient, setIsClient] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -29,57 +30,57 @@ export default function SettingsPage() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-      <Sidebar />
-      <Navbar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
       <PageTransition>
-        <main className="ml-64 min-h-[calc(100vh-73px)] p-8">
-          <div className="max-w-4xl mx-auto space-y-8">
+        <main className="ml-0 md:ml-[260px] min-h-[calc(100vh-73px)] p-4 md:p-8">
+          <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
             {/* Header */}
             <div>
-              <h1 className="text-3xl font-bold text-white">Settings</h1>
-              <p className="mt-1 text-white/50">Manage your account and preferences</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Settings</h1>
+              <p className="mt-1 text-sm sm:text-base text-white/50">Manage your account and preferences</p>
             </div>
 
             {/* Tabs */}
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl overflow-hidden">
+            <div className="rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl overflow-hidden">
               <Tabs defaultValue="profile" className="w-full">
-                <TabsList className="w-full rounded-none border-b border-white/10 bg-transparent px-6">
+                <TabsList className="w-full rounded-none border-b border-white/10 bg-transparent px-4 md:px-6 overflow-x-auto">
                   <TabsTrigger
                     value="profile"
-                    className="flex items-center gap-2 text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+                    className="flex items-center gap-2 text-xs md:text-sm text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 whitespace-nowrap"
                   >
-                    <User className="h-4 w-4" />
+                    <User className="h-3 w-3 md:h-4 md:w-4" />
                     Profile
                   </TabsTrigger>
                   <TabsTrigger
                     value="account"
-                    className="flex items-center gap-2 text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+                    className="flex items-center gap-2 text-xs md:text-sm text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 whitespace-nowrap"
                   >
-                    <Lock className="h-4 w-4" />
+                    <Lock className="h-3 w-3 md:h-4 md:w-4" />
                     Account
                   </TabsTrigger>
                   <TabsTrigger
                     value="notifications"
-                    className="flex items-center gap-2 text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+                    className="flex items-center gap-2 text-xs md:text-sm text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 whitespace-nowrap"
                   >
-                    <Bell className="h-4 w-4" />
+                    <Bell className="h-3 w-3 md:h-4 md:w-4" />
                     Notifications
                   </TabsTrigger>
                   <TabsTrigger
                     value="billing"
-                    className="flex items-center gap-2 text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500"
+                    className="flex items-center gap-2 text-xs md:text-sm text-white/70 hover:text-white data-[state=active]:text-white data-[state=active]:border-b-2 data-[state=active]:border-blue-500 whitespace-nowrap"
                   >
-                    <CreditCard className="h-4 w-4" />
+                    <CreditCard className="h-3 w-3 md:h-4 md:w-4" />
                     Billing
                   </TabsTrigger>
                 </TabsList>
 
                 {/* Profile Tab */}
-                <TabsContent value="profile" className="p-6 space-y-6">
+                <TabsContent value="profile" className="p-4 md:p-6 space-y-4 md:space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center gap-4">
-                      <Avatar className="h-16 w-16">
+                      <Avatar className="h-14 w-14 md:h-16 md:w-16">
                         <AvatarImage src="https://github.com/shadcn.png" />
                         <AvatarFallback>JD</AvatarFallback>
                       </Avatar>
@@ -87,7 +88,7 @@ export default function SettingsPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => toast.info('Upload avatar', { description: 'Feature coming soon' })}
-                        className="px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/40 text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm font-medium"
+                        className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/40 text-blue-400 hover:text-blue-300 transition-all duration-300 text-xs md:text-sm font-medium"
                       >
                         Change Avatar
                       </motion.button>
@@ -95,34 +96,34 @@ export default function SettingsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-white/70 mb-2 block">First Name</Label>
+                        <Label className="text-xs md:text-sm text-white/70 mb-2 block">First Name</Label>
                         <Input
                           defaultValue="John"
-                          className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                          className="bg-white/5 border-white/10 text-sm md:text-base text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
                         />
                       </div>
                       <div>
-                        <Label className="text-white/70 mb-2 block">Last Name</Label>
+                        <Label className="text-xs md:text-sm text-white/70 mb-2 block">Last Name</Label>
                         <Input
                           defaultValue="Doe"
-                          className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                          className="bg-white/5 border-white/10 text-sm md:text-base text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label className="text-white/70 mb-2 block">Email</Label>
+                      <Label className="text-xs md:text-sm text-white/70 mb-2 block">Email</Label>
                       <Input
                         defaultValue="john@finflow.com"
-                        className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                        className="bg-white/5 border-white/10 text-sm md:text-base text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
                       />
                     </div>
 
                     <div>
-                      <Label className="text-white/70 mb-2 block">Company</Label>
+                      <Label className="text-xs md:text-sm text-white/70 mb-2 block">Company</Label>
                       <Input
                         defaultValue="FinFlow Inc."
-                        className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
+                        className="bg-white/5 border-white/10 text-sm md:text-base text-white placeholder:text-white/40 focus:bg-white/10 focus:border-white/20"
                       />
                     </div>
 
@@ -130,7 +131,7 @@ export default function SettingsPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleSave('Profile')}
-                      className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium transition-all duration-300"
+                      className="w-full sm:w-auto px-4 md:px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-sm md:text-base text-white font-medium transition-all duration-300"
                     >
                       Save Changes
                     </motion.button>

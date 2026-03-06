@@ -60,6 +60,7 @@ const reports = [
 
 export default function ReportsPage() {
   const [isClient, setIsClient] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -84,21 +85,21 @@ export default function ReportsPage() {
 
   return (
     <div suppressHydrationWarning className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-      <Sidebar />
-      <Navbar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
       <PageTransition>
-        <main className="ml-64 min-h-[calc(100vh-73px)] p-8">
-          <div className="max-w-7xl mx-auto space-y-8">
+        <main className="ml-0 md:ml-[260px] min-h-[calc(100vh-73px)] p-4 md:p-8">
+          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white">Reports</h1>
-                <p className="mt-1 text-white/50">Download and manage your financial reports</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">Reports</h1>
+                <p className="mt-1 text-sm sm:text-base text-white/50">Download and manage your financial reports</p>
               </div>
               <Button
                 onClick={handleGenerateReport}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-sm sm:text-base"
               >
                 Generate Report
               </Button>
@@ -110,17 +111,17 @@ export default function ReportsPage() {
                 <motion.div
                   key={report.id}
                   whileHover={{ y: -4 }}
-                  className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
+                  className="group rounded-xl md:rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-4 md:p-6 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-white">{report.name}</h3>
-                        <Badge variant={report.status === 'Ready' ? 'default' : 'secondary'}>
+                        <h3 className="text-sm md:text-base font-semibold text-white">{report.name}</h3>
+                        <Badge variant={report.status === 'Ready' ? 'default' : 'secondary'} className="text-xs">
                           {report.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-white/50 mb-3">{report.description}</p>
+                      <p className="text-xs md:text-sm text-white/50 mb-3">{report.description}</p>
                       <div className="flex gap-4 text-xs text-white/40">
                         <span>{report.date}</span>
                         <span>•</span>
@@ -130,13 +131,13 @@ export default function ReportsPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleDownload(report.name)}
                         disabled={report.status !== 'Ready'}
-                        className="p-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 sm:flex-none p-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Download className="h-5 w-5" />
                       </motion.button>
